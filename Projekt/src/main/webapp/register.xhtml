@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+    <title>RegisterPage</title>
+    <h:outputStylesheet name="main.css" library="css"/>
+</h:head>
+
+<h:body>
+
+    <h:form>
+
+        <h:outputText value="Username "/>
+        <h:inputText id="username" value="#{registrationRequest.username}"/>
+        <f:validateRequired/>
+        <f:validateRegex pattern="[a-z0-9]*"/> <!-- male litery ACII i cyfry -->
+
+        <br/>
+
+        <h:outputText value="Forename "/>
+        <h:inputText id="forename" value="#{registrationRequest.forename}"/>
+        <f:validateRequired/>
+        <f:validateRegex pattern="[^\W]{3,50}"/> <!-- cokolwiek o dlugosci 3-50 znakow bez znakow specjalnych -->
+
+        <br/>
+
+        <h:outputText value="Surname "/>
+        <h:inputText id="surname" value="#{registrationRequest.surname}"/>
+        <f:validateRequired/>
+        <f:validateRegex pattern="[^\W]{3,50}"/> <!-- cokolwiek o dlugosci 3-50 znakow bez znakow specjalnych -->
+
+        <br/>
+
+        <h:outputText value="Email "/>
+        <h:inputText id="email" value="#{registrationRequest.email}"/>
+        <f:validateRequired/>
+        <f:validateRegex pattern="(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"/> <!-- dopasowanie zgodne z RFC 5322 -->
+
+        <br/>
+
+        <h:outputText value="DateOfBirth "/>
+        <h:inputText id="dateOfBirth" value="#{registrationRequest.dateOfBirth}"/>
+        <f:validateRequired/>
+        <f:validateRegex pattern="^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$"/> <!-- dzien/miesiac/rok -->
+
+
+        <br/>
+
+        <h:outputText value="Password "/>
+        <h:inputSecret id="password" value="#{registrationRequest.password}"/>
+        <f:validateRequired/>
+        <!-- przynajmniej 1 mala, 1 duza litera, 1 liczba, dlugosc 5-50 znakow -->
+        <f:validateRegex pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{5,50}$"/>
+
+        <br/>
+
+        <h:outputText value="RepeatPassword "/>
+        <h:inputSecret id="repeatPassword" value="#{registrationRequest.passwordEquals}"/>
+        <f:validateRequired/>
+
+
+        <br/>
+
+        <h:commandButton action="#{registrationRequest.doPost}" value="Login"/>
+
+    </h:form>
+
+</h:body>
+
+</html>
