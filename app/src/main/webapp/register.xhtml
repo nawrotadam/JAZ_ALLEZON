@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:o="http://omnifaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://java.sun.com/jstl/core">
+
+<h:head>
+    <title>RegisterPage</title>
+    <h:outputStylesheet name="main.css" library="css"/>
+</h:head>
+
+<h:body>
+
+    <h:form>
+
+        <h:inputText id="username" a:placeholder="username" value="#{registrationRequest.username}">
+            <f:validateRequired/>
+            <f:validateRegex pattern="[a-z0-9]*"/> <!-- small ACII letters and numbers -->
+        </h:inputText>
+        <h:outputText value="Small letters or numbers"/>
+        <c:if test="#{flash.containsKey('already-exist')}">
+            <small class="form-text text-danger"><h:outputText value="flash['already-exist']}"/></small>
+        </c:if>
+
+        <br/>
+
+        <h:inputText id="firstname" a:placeholder="firstname" value="#{registrationRequest.firstname}">
+            <f:validateRequired/>
+            <f:validateRegex pattern="[^\W]{3,50}"/> <!-- anything with length about 3 to 50, without special characters -->
+        </h:inputText>
+        <h:outputText value="3 to 50 characters without special ones"/>
+
+        <br/>
+
+        <h:inputText id="lastname" a:placeholder="lastname" value="#{registrationRequest.lastname}">
+            <f:validateRequired/>
+            <f:validateRegex pattern="[^\W]{3,50}"/> <!-- anything with length about 3 to 50, without special characters -->
+        </h:inputText>
+        <h:outputText value="3 to 50 characters without special ones"/>
+
+        <br/>
+
+        <h:inputText id="email" a:placeholder="email" value="#{registrationRequest.email}">
+            <f:validateRequired/>
+            <f:validateRegex pattern="(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"/> <!-- RFC 5322 compatible -->
+        </h:inputText>
+        <h:outputText value="adress format: text@Service's name.domain"/>
+
+        <br/>
+
+        <h:inputText id="dateOfBirth" a:placeholder="dateOfBirth" value="#{registrationRequest.dateOfBirth}">
+            <f:validateRequired/>
+            <f:validateRegex pattern="^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$"/> <!-- day/month/year  -->
+        </h:inputText>
+        <h:outputText value="day/month/year"/>
+
+        <br/>
+
+        <h:inputSecret id="password" a:placeholder="password" value="#{registrationRequest.password}">
+            <f:validateRequired/>
+            <!-- 1 small and 1 big letter, 1 number, length of 5-50 characters -->
+            <f:validateRegex pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{5,50}$"/>
+        </h:inputSecret>
+        <h:outputText value="1 small and 1 big letter, 1 number, length of 5-50 characters"/>
+
+        <br/>
+
+        <h:inputSecret id="repeatedPassword" a:placeholder="repeat password" >
+            <f:validateRequired/>
+        </h:inputSecret>
+
+        <o:validateEqual components="password repeatedPassword" message="Passwords don't match" showMessageFor="repeatedPassword"/>
+
+        <br/>
+
+        <h:commandButton value="Register" action="#{registrationController.register}"/>
+
+    </h:form>
+
+    <h:form>
+        <h:commandButton value="Add test user" action="#{profileRepository.persistTestUser}"/>
+    </h:form>
+
+
+</h:body>
+
+</html>

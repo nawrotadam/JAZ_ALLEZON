@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20191021_init
+      author: Adam Nawrot
+      sqlFile:
+        relativeToChangelogFile: true
+        splitStatements: false
+        path: 20191021_init.sql
+  - changeSet:
+      id: 20191205_auction
+      author: Adam Nawrot
+      sqlFile:
+        relativeToChangelogFile: true
+        splitStatements: false
+        path: 20191205_auction.sql
+  - changeSet:
+      id: 20200901_basket
+      author: Adam Nawrot
+      sqlFile:
+        relativeToChangelogFile: true
+        splitStatements: false
+        path: 20200901_basket.sql

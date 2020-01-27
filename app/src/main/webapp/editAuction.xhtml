@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+    <title>LoginPage</title>
+    <h:outputStylesheet name="main.css" library="css"/>
+</h:head>
+
+<h:body>
+    <h:form>
+        <h:inputText id="title" a:placeholder="title" value="#{auctionRequest.newTitle}">
+            <f:validateRequired/>
+        </h:inputText><br/>
+
+
+        <h:inputText id="description" a:placeholder="description" value="#{auctionRequest.newDescription}"/><br/>
+
+
+        <h:inputText id="price" a:placeholder="price" value="#{auctionRequest.newPrice}">
+            <f:validateRequired/>
+        </h:inputText><br/>
+
+
+        <h:inputText id="category" a:placeholder="category" value="#{auctionRequest.newCategory}">
+            <f:validateRequired/>
+        </h:inputText><br/>
+
+
+        <h:inputText id="section" a:placeholder="section" value="#{auctionRequest.newSection}">
+            <f:validateRequired/>
+        </h:inputText><br/>
+
+
+        <h:inputText id="param1" a:placeholder="parametr 1" value="#{auctionRequest.newParameter1}"/>
+        <h:inputText id="param2" a:placeholder="parametr 2" value="#{auctionRequest.newParameter2}"/>
+        <h:inputText id="param3" a:placeholder="parametr 3" value="#{auctionRequest.newParameter3}"/><br/>
+
+
+        <h:inputText id="photo1" a:placeholder="First photo" value="#{auctionRequest.newPhoto1}"/>
+        <h:inputText id="photo2" a:placeholder="Second photo" value="#{auctionRequest.newPhoto2}"/>
+        <h:inputText id="photo3" a:placeholder="Third photo" value="#{auctionRequest.newPhoto3}"/>
+
+
+        <h:commandButton action="#{auctionRepository.editAuction}" value="Edit auction"/>
+
+    </h:form>
+
+</h:body>
+
+</html>

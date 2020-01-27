@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+    <title>LoginPage</title>
+    <h:outputStylesheet name="main.css" library="css"/>
+</h:head>
+
+<h:body>
+
+    <h:dataTable value="#{auctionRepository.auctions}" var="auction"
+                 styleClass="order-table"
+                 headerClass="order-table-header"
+                 rowClasses="order-table-odd-row,order-table-even-row"
+    >
+
+        <h:column>
+            <f:facet name="title">Title</f:facet>
+            <h:outputText value="#{auction.title}"/>
+        </h:column>
+
+        <h:column>
+            <f:facet name="photo">Photo</f:facet>
+            <img src="#{auction.photos.get(0).link}" width="200" height="200" alt="Auction miniature"/><br/>
+        </h:column>
+
+        <h:column>
+            <f:facet name="price">Price</f:facet>
+            <h:outputText value="#{auction.price}"/><br/>
+        </h:column>
+
+        <h:column>
+            <f:facet name="edit">Edit auction</f:facet>
+
+            <h:inputHidden action="#{auctionRequest.auctionId}">
+                <f:param name="auctionId" value="#{auction.id}"/>
+            </h:inputHidden>
+
+            <h:button outcome="editAuction" value="Edit auction"/><br/>
+        </h:column>
+
+    </h:dataTable>
+
+</h:body>
+
+</html>

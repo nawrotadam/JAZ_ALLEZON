@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>LoginPage</title>
+    <h:outputStylesheet name="main.css" library="css"/>
+</h:head>
+
+<h:body>
+
+    <h:form enctype="multipart/form-data}">
+        <h:inputText id="title" a:placeholder="title" value="#{auctionRequest.title}">
+            <f:validateRequired/>
+        </h:inputText>
+
+        <br/>
+
+        <h:inputText id="description" a:placeholder="description" value="#{auctionRequest.description}"/>
+
+        <br/>
+
+        <h:inputText id="price" a:placeholder="price" value="#{auctionRequest.price}">
+            <f:validateRequired/>
+        </h:inputText>
+
+        <br/>
+
+        <h:inputText id="category" a:placeholder="category" value="#{auctionRequest.category}">
+            <f:validateRequired/>
+        </h:inputText>
+
+        <br/>
+
+        <h:inputText id="section" a:placeholder="section" value="#{auctionRequest.section}">
+            <f:validateRequired/>
+        </h:inputText>
+
+        <br/>
+
+        <h:inputText id="param1" a:placeholder="parametr 1" value="#{auctionRequest.parameter1}"/>
+        <h:inputText id="param2" a:placeholder="parametr 2" value="#{auctionRequest.parameter2}"/>
+        <h:inputText id="param3" a:placeholder="parametr 3" value="#{auctionRequest.parameter3}"/>
+
+        <br/>
+
+        <h:inputText id="photo1" a:placeholder="First photo" value="#{auctionRequest.photo1}"/>
+        <h:inputText id="photo2" a:placeholder="Second photo" value="#{auctionRequest.photo2}"/>
+        <h:inputText id="photo3" a:placeholder="Third photo" value="#{auctionRequest.photo3}"/>
+
+        <br/>
+
+        <p:commandButton action="#{auctionRepository.addAuction}" value="Add auction"/>
+
+        <h:commandButton action="#{auctionRepository.addTestCategoryAndSection}" value="Add test category and section named asd"/>
+
+    </h:form>
+</h:body>
+
+</html>

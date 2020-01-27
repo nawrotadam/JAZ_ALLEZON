@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+    <title>LoginPage</title>
+    <h:outputStylesheet name="main.css" library="css"/>
+</h:head>
+
+<h:body>
+    <h:form>
+       <h:outputText value="Write down name of the section you want to change"/><br/>
+
+        <h:inputText id="oldName" a:placeholder="old name" value="#{auctionRequest.section}">
+            <f:validateRequired/>
+        </h:inputText><br/>
+
+        <h:inputText id="newName" a:placeholder="new name" value="#{auctionRequest.newSection}">
+            <f:validateRequired/>
+        </h:inputText>
+
+        <h:commandButton action="#{auctionRepository.editSection}" value="Change section"/>
+
+    </h:form>
+
+</h:body>
+
+
+</html>
