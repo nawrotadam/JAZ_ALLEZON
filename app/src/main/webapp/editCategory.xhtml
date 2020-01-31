@@ -15,20 +15,19 @@
 </h:head>
 
 <h:body>
+
     <h:form>
-        <h:inputText id="section" a:placeholder="section" value="#{auctionRequest.section}">
+        <h:inputText a:placeholder="Old category" value="#{auctionRequest.category}">
             <f:validateRequired/>
         </h:inputText><br/>
 
-        <h:outputText value="What category is it supposed to belong?"/><br/>
+        <h:inputText a:placeholder="New category name" value="#{auctionRequest.newCategory}">
+            <f:validateRequired/>
+        </h:inputText><br/>
 
-        <h:selectOneMenu value="#{auctionRequest.category}">
-            <f:selectItems value="#{auctionRepository.categoryNames}"/>
-        </h:selectOneMenu>
-
-        <h:commandButton action="#{auctionRepository.addSection}" value="Add section"/>
-
+        <h:commandButton action="#{auctionRepository.editCategory}" value="Edit category"/>
     </h:form>
+
 
 </h:body>
 

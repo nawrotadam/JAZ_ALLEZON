@@ -15,7 +15,12 @@
 
 <h:body>
 
-    <h:button onclick="#{auctionRepository.initializeSections()}" value="Initialise basic categories and sections"/><br/><br/>
+    <h:button outcome="addCategory.xhtml" value="Add category"/>
+    <h:button outcome="editCategory.xhtml" value="Edit category"/><br/>
+
+    <h:button outcome="addSection.xhtml" value="Add section"/>
+    <h:button outcome="editSection.xhtml" value="Edit section"/><br/><br/>
+
     <h:button outcome="addAuction.xhtml" value="Add new auction"/><br/><br/>
 
 
@@ -25,10 +30,8 @@
         <h:column>
             <h:outputText value="#{auction.title}"/>
         </h:column>
-        <h:column>
-            <c:if test="${not empty auction.photos}">
-                <img src="#{auction.photos.get(0).link}" width="200" height="200" alt="Auction miniature"/>
-            </c:if>
+        <h:column rendered="#{not empty auction.photos}">
+            <img src="#{auction.photos.get(0).link}" width="200" height="200" alt="Auction miniature" />
         </h:column>
         <h:column>
             <h:outputText value="#{auction.price}"/>
@@ -48,10 +51,8 @@
                 <h:column>
                     <h:outputText value="#{auction.title}"/>
                 </h:column>
-                <h:column>
-                    <c:if test="${not empty auction.photos}">
-                        <img src="#{auction.photos.get(0).link}" width="200" height="200" alt="Auction miniature"/>
-                    </c:if>
+                <h:column rendered="#{not empty auction.photos}">
+                    <img src="#{auction.photos.get(0).link}" width="200" height="200" alt="Auction miniature"/>
                 </h:column>
                 <h:column>
                     <h:outputText value="#{auction.price}"/>

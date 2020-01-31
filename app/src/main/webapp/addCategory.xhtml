@@ -10,24 +10,18 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 
 <h:head>
-    <title>LoginPage</title>
+    <title>Add category</title>
     <h:outputStylesheet name="main.css" library="css"/>
 </h:head>
 
 <h:body>
+
     <h:form>
-        <h:inputText id="section" a:placeholder="section" value="#{auctionRequest.section}">
+        <h:inputText id="category" a:placeholder="Category" value="#{auctionRequest.category}">
             <f:validateRequired/>
         </h:inputText><br/>
 
-        <h:outputText value="What category is it supposed to belong?"/><br/>
-
-        <h:selectOneMenu value="#{auctionRequest.category}">
-            <f:selectItems value="#{auctionRepository.categoryNames}"/>
-        </h:selectOneMenu>
-
-        <h:commandButton action="#{auctionRepository.addSection}" value="Add section"/>
-
+        <h:commandButton action="#{auctionRepository.addCategory}" value="Add category"/>
     </h:form>
 
 </h:body>
