@@ -36,7 +36,7 @@ public class AuctionEntity {
     private CategoryEntity category;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "auction")
-    private List<PhotoEntity> photos;
+    private List<PhotoEntity> photoList;
 
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "auction")
     private Set<AuctionParameterEntity> parameters;
@@ -51,7 +51,7 @@ public class AuctionEntity {
     public BigDecimal getPrice() { return price; }
     public CategoryEntity getCategory() { return category; }
     public ProfileEntity getOwner(){return owner;}
-    public List<PhotoEntity> getPhotos(){return photos;}
+    public List<PhotoEntity> getPhotoList(){return photoList;}
     public Set<AuctionParameterEntity> getParameters(){return parameters;}
 
     public void setId(Long id){this.id = id;}
@@ -60,7 +60,7 @@ public class AuctionEntity {
     public void setPrice(BigDecimal price) { this.price = price; }
     public void setOwner(ProfileEntity owner) { this.owner = owner; }
     public void setCategory(CategoryEntity category) { this.category = category; }
-    public void setPhotos(List<PhotoEntity> photos) { this.photos = photos; }
+    public void setPhotoList(List<PhotoEntity> photoList) { this.photoList = photoList; }
     public void setParameters(Set<AuctionParameterEntity> parameters) { this.parameters = parameters; }
 
 }

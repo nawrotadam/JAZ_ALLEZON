@@ -223,7 +223,7 @@ public class AuctionRepository {
         ProfileEntity auctionOwner = auctionOwnerList.get(auctionOwnerList.size() - 1);
 
         return em.
-                createQuery("Select a.photos from AuctionEntity a where a.owner = :auctionOwner").
+                createQuery("Select a.photoList from AuctionEntity a where a.owner = :auctionOwner").
                 setParameter("auctionOwner", auctionOwner).getResultList();
     }
 
@@ -237,34 +237,33 @@ public class AuctionRepository {
                 createQuery("Select u from ProfileEntity u where u.username = :sessionUsername", ProfileEntity.class).
                 setParameter("sessionUsername", sessionUsername).getSingleResult();
 
-        List<AuctionEntity> debug = em.
+        List<AuctionEntity> auctionList = em.
                 createQuery("Select a from AuctionEntity a where a.owner = :auctionOwner", AuctionEntity.class).
                 setParameter("auctionOwner", auctionOwner).getResultList();
 
-        return em.
-                createQuery("Select a from AuctionEntity a where a.owner = :auctionOwner", AuctionEntity.class).
-                setParameter("auctionOwner", auctionOwner).getResultList();
+        if(!auctionList.isEmpty())
+        {
+            return auctionList;
+        }
+        else return null;
     }
 
     @Transactional
     public List<AuctionEntity> getAllAuctions()
     {
-        return em.
-                createQuery("Select a from AuctionEntity a", AuctionEntity.class).getResultList();
+        return em.createQuery("Select a from AuctionEntity a", AuctionEntity.class).getResultList();
     }
 
     @Transactional
     public List<String> getSectionNames()
     {
-        return em.
-                createQuery("Select s.name from SectionEntity s", String.class).getResultList();
+        return em.createQuery("Select s.name from SectionEntity s", String.class).getResultList();
     }
 
     @Transactional
     public List<String> getCategoryNames()
     {
-        return em.
-                createQuery("Select c.name from CategoryEntity c", String.class).getResultList();
+        return em.createQuery("Select c.name from CategoryEntity c", String.class).getResultList();
     }
 
     @Transactional

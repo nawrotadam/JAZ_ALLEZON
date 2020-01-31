@@ -26,12 +26,34 @@
 
     <h:outputText value="Your auctions"/>
 
-    <h:dataTable border="1" value="#{auctionRepository.ownerAuctions}" var="auction">
+    <h:dataTable border="1" value="#{auctionRepository.ownerAuctions}" var="auction" width="500" height="500">
         <h:column>
             <h:outputText value="#{auction.title}"/>
         </h:column>
-        <h:column rendered="#{not empty auction.photos}">
-            <img src="#{auction.photos.get(0).link}" width="200" height="200" alt="Auction miniature" />
+
+        <h:column>
+            <img src="#{auction.photoList[0].link}" width="200" height="200" alt="Auction miniature" />
+        </h:column>
+
+        <h:column>
+            <h:outputText value="#{auction.price}"/>
+        </h:column>
+        <h:column>
+            <h:inputHidden action="#{auctionRequest.auctionId}">
+                <f:param name="auctionId" value="#{auction.id}"/>
+            </h:inputHidden>
+            <h:button outcome="editAuction.xhtml" value="Edit auction"/>
+        </h:column>
+    </h:dataTable><br/><br/>
+
+
+    <h:outputText value="All auctions"/>
+    <h:dataTable border="1" value="#{auctionRepository.allAuctions}" var="auction" width="500" height="500">
+        <h:column>
+            <h:outputText value="#{auction.title}"/>
+        </h:column>
+        <h:column>
+            <img src="#{auction.photoList[0].link}" width="200" height="200" alt="Auction miniature"/>
         </h:column>
         <h:column>
             <h:outputText value="#{auction.price}"/>
@@ -42,29 +64,7 @@
             </h:inputHidden>
             <h:button outcome="editAuction.xhtml" value="Edit auction"/>
         </h:column>
-    </h:dataTable><br/>
-
-
-    <h:outputText value="All auctions"/>
-        <h:column>
-            <h:dataTable border="1" value="#{auctionRepository.allAuctions}" var="auction">
-                <h:column>
-                    <h:outputText value="#{auction.title}"/>
-                </h:column>
-                <h:column rendered="#{not empty auction.photos}">
-                    <img src="#{auction.photos.get(0).link}" width="200" height="200" alt="Auction miniature"/>
-                </h:column>
-                <h:column>
-                    <h:outputText value="#{auction.price}"/>
-                </h:column>
-                <h:column>
-                    <h:inputHidden action="#{auctionRequest.auctionId}">
-                        <f:param name="auctionId" value="#{auction.id}"/>
-                    </h:inputHidden>
-                    <h:button outcome="editAuction.xhtml" value="Edit auction"/>
-                </h:column>
-            </h:dataTable>
-        </h:column>
+    </h:dataTable>
 
 </h:body>
 
