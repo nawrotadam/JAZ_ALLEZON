@@ -6,6 +6,7 @@ import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "auction")
@@ -38,7 +39,7 @@ public class AuctionEntity {
     private List<PhotoEntity> photos;
 
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "auction")
-    private List<ParameterEntity> parameters;
+    private Set<AuctionParameterEntity> parameters;
 
 
 
@@ -51,7 +52,7 @@ public class AuctionEntity {
     public CategoryEntity getCategory() { return category; }
     public ProfileEntity getOwner(){return owner;}
     public List<PhotoEntity> getPhotos(){return photos;}
-    public List<ParameterEntity> getParameters(){return parameters;}
+    public Set<AuctionParameterEntity> getParameters(){return parameters;}
 
     public void setId(Long id){this.id = id;}
     public void setTitle(String title) { this.title = title; }
@@ -60,6 +61,6 @@ public class AuctionEntity {
     public void setOwner(ProfileEntity owner) { this.owner = owner; }
     public void setCategory(CategoryEntity category) { this.category = category; }
     public void setPhotos(List<PhotoEntity> photos) { this.photos = photos; }
-    public void setParameters(List<ParameterEntity> parameters) { this.parameters = parameters; }
+    public void setParameters(Set<AuctionParameterEntity> parameters) { this.parameters = parameters; }
 
 }

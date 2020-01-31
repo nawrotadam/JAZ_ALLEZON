@@ -1,4 +1,4 @@
-CREATE TABLE section
+CREATE TABLE category
 (
     id BIGSERIAL NOT NULL,
     name varchar NOT NULL,
@@ -6,15 +6,15 @@ CREATE TABLE section
     PRIMARY KEY (id)
 );
 
-CREATE TABLE category
+CREATE TABLE section
 (
     id BIGSERIAL NOT NULL,
     name varchar NOT NULL,
 
-    section_id BIGINT NOT NULL,
+    category_id BIGINT NOT NULL,
 
     PRIMARY KEY (id),
-    FOREIGN KEY (section_id) REFERENCES section(id)
+    FOREIGN KEY (category_id) REFERENCES category(id)
 );
 
 CREATE TABLE auction
@@ -48,8 +48,18 @@ CREATE TABLE parameter
     id BIGSERIAL NOT NULL,
     name VARCHAR NOT NULL,
 
-    auction_id BIGINT NOT NULL,
+    PRIMARY KEY (id)
+);
 
-    PRIMARY KEY (id),
-    FOREIGN KEY (auction_id) REFERENCES auction (id)
-)
+
+CREATE TABLE auctionParameter
+(
+    value VARCHAR NOT NULL,
+
+    auction_id BIGINT NOT NULL,
+    parameter_id BIGINT NOT NULL,
+
+    PRIMARY KEY (auction_id, parameter_id),
+    FOREIGN KEY (auction_id) REFERENCES auction (id),
+    FOREIGN KEY (parameter_id) REFERENCES parameter (id)
+);

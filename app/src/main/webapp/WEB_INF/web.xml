@@ -38,10 +38,4 @@
         <tracking-mode>COOKIE</tracking-mode>
     </session-config>
 
-    <context-param>
-        <description>Uploaded files storage</description>
-        <param-name>file-upload</param-name>
-        <param-value>/JAZ_Moje/Projekt_Glowny_JAZ/app/src/main/resources/images</param-value>
-    </context-param>
-
 </web-app>

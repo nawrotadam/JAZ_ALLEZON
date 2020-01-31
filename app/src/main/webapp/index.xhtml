@@ -5,7 +5,8 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://java.sun.com/jstl/core">
 
 <h:head>
     <title>LoginPage</title>
@@ -14,38 +15,55 @@
 
 <h:body>
 
-    <h:dataTable value="#{auctionRepository.auctions}" var="auction"
-                 styleClass="order-table"
-                 headerClass="order-table-header"
-                 rowClasses="order-table-odd-row,order-table-even-row"
-    >
+    <h:button onclick="#{auctionRepository.initializeSections()}" value="Initialise basic categories and sections"/><br/><br/>
+    <h:button outcome="addAuction.xhtml" value="Add new auction"/><br/><br/>
 
+
+    <h:outputText value="Your auctions"/>
+
+    <h:dataTable border="1" value="#{auctionRepository.ownerAuctions}" var="auction">
         <h:column>
-            <f:facet name="title">Title</f:facet>
             <h:outputText value="#{auction.title}"/>
         </h:column>
-
         <h:column>
-            <f:facet name="photo">Photo</f:facet>
-            <img src="#{auction.photos.get(0).link}" width="200" height="200" alt="Auction miniature"/><br/>
+            <c:if test="${not empty auction.photos}">
+                <img src="#{auction.photos.get(0).link}" width="200" height="200" alt="Auction miniature"/>
+            </c:if>
         </h:column>
-
         <h:column>
-            <f:facet name="price">Price</f:facet>
-            <h:outputText value="#{auction.price}"/><br/>
+            <h:outputText value="#{auction.price}"/>
         </h:column>
-
         <h:column>
-            <f:facet name="edit">Edit auction</f:facet>
-
             <h:inputHidden action="#{auctionRequest.auctionId}">
                 <f:param name="auctionId" value="#{auction.id}"/>
             </h:inputHidden>
-
-            <h:button outcome="editAuction" value="Edit auction"/><br/>
+            <h:button outcome="editAuction.xhtml" value="Edit auction"/>
         </h:column>
+    </h:dataTable><br/>
 
-    </h:dataTable>
+
+    <h:outputText value="All auctions"/>
+        <h:column>
+            <h:dataTable border="1" value="#{auctionRepository.allAuctions}" var="auction">
+                <h:column>
+                    <h:outputText value="#{auction.title}"/>
+                </h:column>
+                <h:column>
+                    <c:if test="${not empty auction.photos}">
+                        <img src="#{auction.photos.get(0).link}" width="200" height="200" alt="Auction miniature"/>
+                    </c:if>
+                </h:column>
+                <h:column>
+                    <h:outputText value="#{auction.price}"/>
+                </h:column>
+                <h:column>
+                    <h:inputHidden action="#{auctionRequest.auctionId}">
+                        <f:param name="auctionId" value="#{auction.id}"/>
+                    </h:inputHidden>
+                    <h:button outcome="editAuction.xhtml" value="Edit auction"/>
+                </h:column>
+            </h:dataTable>
+        </h:column>
 
 </h:body>
 

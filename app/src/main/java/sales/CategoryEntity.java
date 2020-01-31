@@ -1,6 +1,8 @@
 package sales;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name="category")
@@ -14,19 +16,22 @@ public class CategoryEntity {
     @Column(name = "name")
     private String name;
 
-    @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "section_id")
-    private SectionEntity section;
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy="category")
+    private Set<SectionEntity> sections;
+
 
     public CategoryEntity() { }
     public CategoryEntity(String name) { this.name = name; }
 
+    public void setId(Long id){this.id = id;}
+    public Long getId() {return id;}
+
     public String getName(){ return name; }
     public void setName(String name) {this.name = name;}
 
-    public SectionEntity getSection() {return section;}
-    public void setSection(SectionEntity section){this.section = section;}
+    public Set<SectionEntity> getSections() {return sections;}
+    public void setSections(Set<SectionEntity> sections){this.sections = sections;}
 
-    public void setId(Long id){this.id = id;}
-    public Long getId() {return id;}
+    public void addSection(SectionEntity section) { this.sections.add(section); }
+
 }

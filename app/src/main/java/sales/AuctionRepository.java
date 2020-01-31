@@ -1,16 +1,19 @@
 package sales;
 import auth.ProfileEntity;
-import auth.ProfileService;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
-import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 @Named
 @RequestScoped
@@ -29,25 +32,20 @@ public class AuctionRepository {
         var session = request.getSession(false);
         String sessionUsername = String.valueOf(session.getAttribute("username"));
 
-        List<ProfileEntity> auctionOwnerList = em.
+        ProfileEntity auctionOwner = em.
                 createQuery("Select u from ProfileEntity u where u.username = :sessionUsername", ProfileEntity.class).
-                setParameter("sessionUsername", sessionUsername).getResultList();
-        ProfileEntity auctionOwner = auctionOwnerList.get(auctionOwnerList.size() - 1);
+                setParameter("sessionUsername", sessionUsername).getSingleResult();
 
         AuctionEntity auction = new AuctionEntity();
         auction.setOwner(auctionOwner);
 
         String sectionName = auctionRequest.getSection();
-        List<SectionEntity> sectionList = em.createQuery("Select s from SectionEntity s where s.name = :sectionName", SectionEntity.class).
-                setParameter("sectionName", sectionName).getResultList();
-        SectionEntity section = sectionList.get(sectionList.size() - 1);
+        CategoryEntity category = em.createQuery("Select s.category from SectionEntity s where s.name = :sectionName", CategoryEntity.class).
+                setParameter("sectionName", sectionName).getSingleResult();
 
-        String categoryName = auctionRequest.getCategory();
-        List<CategoryEntity> categoryList = em.createQuery("Select c from CategoryEntity c where c.name = :categoryName", CategoryEntity.class).
-                setParameter("categoryName", categoryName).getResultList();
-        CategoryEntity category = categoryList.get(categoryList.size() - 1);
-
-        category.setSection(section);
+        SectionEntity section = em.createQuery("Select s from SectionEntity s where s.name = :sectionName", SectionEntity.class).
+                setParameter("sectionName", sectionName).getSingleResult();
+        section.setCategory(category);
         auction.setCategory(category);
 
         auction.setTitle(auctionRequest.getTitle());
@@ -55,17 +53,26 @@ public class AuctionRepository {
         auction.setPrice(auctionRequest.getPrice());
         em.persist(auction);
 
-        ParameterEntity parameter1 = new ParameterEntity(auctionRequest.getParameter1());
-        ParameterEntity parameter2 = new ParameterEntity(auctionRequest.getParameter2());
-        ParameterEntity parameter3 = new ParameterEntity(auctionRequest.getParameter3());
+        ParameterEntity parameter1 = new ParameterEntity(auctionRequest.getParameterName1());
+        AuctionParameterEntity auctionParameter1 = new AuctionParameterEntity();
+        auctionParameter1.setAuction(auction);
+        auctionParameter1.setParameter(parameter1);
+        auctionParameter1.setValue(auctionRequest.getParameterValue1());
+        em.persist(auctionParameter1);
 
-        parameter1.setAuction(auction);
-        parameter2.setAuction(auction);
-        parameter3.setAuction(auction);
+        ParameterEntity parameter2 = new ParameterEntity(auctionRequest.getParameterName2());
+        AuctionParameterEntity auctionParameter2 = new AuctionParameterEntity();
+        auctionParameter2.setAuction(auction);
+        auctionParameter2.setParameter(parameter2);
+        auctionParameter2.setValue(auctionRequest.getParameterValue2());
+        em.persist(auctionParameter2);
 
-        em.persist(parameter1);
-        em.persist(parameter2);
-        em.persist(parameter3);
+        ParameterEntity parameter3 = new ParameterEntity(auctionRequest.getParameterName3());
+        AuctionParameterEntity auctionParameter3 = new AuctionParameterEntity();
+        auctionParameter3.setAuction(auction);
+        auctionParameter3.setParameter(parameter3);
+        auctionParameter3.setValue(auctionRequest.getParameterValue3());
+        em.persist(auctionParameter3);
 
         PhotoEntity photo1 = new PhotoEntity(auctionRequest.getPhoto1());
         PhotoEntity photo2 = new PhotoEntity(auctionRequest.getPhoto2());
@@ -92,18 +99,15 @@ public class AuctionRepository {
                 setParameter("auctionId", auctionId).getSingleResult();
 
         String sectionName = auctionRequest.getSection();
+        CategoryEntity category = em.createQuery("Select s.category from SectionEntity s where s.name = :sectionName", CategoryEntity.class).
+                setParameter("sectionName", sectionName).getSingleResult();
+
         SectionEntity section = em.createQuery("Select s from SectionEntity s where s.name = :sectionName", SectionEntity.class).
                 setParameter("sectionName", sectionName).getSingleResult();
         section.setName(auctionRequest.getNewSection());
+        section.setCategory(category);
+        auction.setCategory(category);
         em.merge(section);
-
-        String categoryName = auctionRequest.getCategory();
-        CategoryEntity category = em.createQuery("Select c from CategoryEntity c where c.name = :categoryName", CategoryEntity.class).
-                setParameter("categoryName", categoryName).getSingleResult();
-        category.setName(auctionRequest.getNewCategory());
-        em.merge(category);
-
-        category.setSection(section);
 
         auction.setTitle(auctionRequest.getNewTitle());
         auction.setDescription(auctionRequest.getNewDescription());
@@ -115,11 +119,20 @@ public class AuctionRepository {
         photoList.get(1).setLink(auctionRequest.getNewPhoto2());
         photoList.get(2).setLink(auctionRequest.getNewPhoto3());
 
-        List<ParameterEntity> parameterList = em.createQuery("Select p from ParameterEntity p where p.auction = :auction", ParameterEntity.class).
-                setParameter("auction", auction).getResultList();
-        parameterList.get(0).setName(auctionRequest.getNewParameter1());
-        parameterList.get(1).setName(auctionRequest.getNewParameter2());
-        parameterList.get(2).setName(auctionRequest.getNewParameter3());
+        AuctionParameterEntity auctionParameter = em.createQuery("Select p from AuctionParameterEntity p where p.auction = :auction", AuctionParameterEntity.class).
+                setParameter("auction", auction).getSingleResult();
+
+        Set<ParameterEntity> parameterSet = new LinkedHashSet<>();
+        ParameterEntity parameter1 = new ParameterEntity(auctionRequest.getParameterName1());
+        ParameterEntity parameter2 = new ParameterEntity(auctionRequest.getParameterName2());
+        ParameterEntity parameter3 = new ParameterEntity(auctionRequest.getParameterName3());
+
+        parameterSet.add(parameter1);
+        parameterSet.add(parameter2);
+        parameterSet.add(parameter3);
+
+//        auctionParameter.setParameters(parameterSet);
+        em.merge(auctionParameter);
 
         em.merge(auction);
         return "index";
@@ -144,14 +157,16 @@ public class AuctionRepository {
     public String editSection() {
         String sectionName = auctionRequest.getSection();
         String newSectionName = auctionRequest.getNewSection();
-        List<SectionEntity> sectionList = em.createQuery("Select s from SectionEntity s where s.name = :sectionName", SectionEntity.class).
-                setParameter("sectionName", sectionName).getResultList();
-        SectionEntity section = sectionList.get(sectionList.size() - 1);
+        try{
+            SectionEntity section = em.createQuery("Select s from SectionEntity s where s.name = :sectionName", SectionEntity.class).
+                    setParameter("sectionName", sectionName).getSingleResult();
 
-        section.setName(newSectionName);
-        em.merge(section);
-
-        return "index";
+            section.setName(newSectionName);
+            em.merge(section);
+            return "index";
+        } catch(NoResultException e) {
+            return "index";
+        }
     }
 
     @Transactional
@@ -174,48 +189,102 @@ public class AuctionRepository {
     }
 
     @Transactional
-    public List<AuctionEntity> getAuctions()
+    public List<AuctionEntity> getOwnerAuctions()
     {
         var session = request.getSession(false);
         String sessionUsername = String.valueOf(session.getAttribute("username"));
 
-        List<ProfileEntity> auctionOwnerList = em.
+        ProfileEntity auctionOwner = em.
                 createQuery("Select u from ProfileEntity u where u.username = :sessionUsername", ProfileEntity.class).
-                setParameter("sessionUsername", sessionUsername).getResultList();
-        ProfileEntity auctionOwner = auctionOwnerList.get(auctionOwnerList.size() - 1);
+                setParameter("sessionUsername", sessionUsername).getSingleResult();
 
         return em.
                 createQuery("Select a from AuctionEntity a where a.owner = :auctionOwner", AuctionEntity.class).
                 setParameter("auctionOwner", auctionOwner).getResultList();
     }
 
+    @Transactional
+    public List<AuctionEntity> getAllAuctions()
+    {
+        return em.
+                createQuery("Select a from AuctionEntity a", AuctionEntity.class).getResultList();
+    }
 
+    @Transactional
+    public List<String> getSectionNames()
+    {
+        return em.
+                createQuery("Select s.name from SectionEntity s", String.class).getResultList();
+    }
 
     @Transactional
     public void addTestCategoryAndSection() {
-        var section = new SectionEntity("asd");
-        em.persist(section);
+        String sectionName = "asd";
+        List<SectionEntity> sectionList = em.createQuery("Select s from SectionEntity s where s.name = :sectionName", SectionEntity.class).
+                setParameter("sectionName", sectionName).getResultList();
 
-        var category = new CategoryEntity("asd");
-        category.setSection(section);
+        String categoryName = "asd";
+        List<CategoryEntity> categoryList = em.createQuery("Select c from CategoryEntity c where c.name = :categoryName", CategoryEntity.class).
+                setParameter("categoryName", categoryName).getResultList();
 
-        em.persist(category);
+        if(sectionList.isEmpty() && categoryList.isEmpty())
+        {
+            var category = new CategoryEntity("asd");
+            var section = new SectionEntity("asd");
 
+            section.setCategory(category);
+            em.persist(category);
+            em.persist(section);
+        }
     }
 
-    @Transactional
-    public String persistTestUser()
+    //@PostConstruct
+
+//    @Transactional
+//    public void initializeSections()
+//    {
+//        Set<SectionEntity> computerSection = new LinkedHashSet<>();
+//        SectionEntity laptops = new SectionEntity("laptops");
+//        SectionEntity printers = new SectionEntity("printers");
+//        computerSection.add(laptops);
+//        computerSection.add(printers);
+//        em.persist(laptops);
+//        em.persist(printers);
+//
+//        Set<SectionEntity> automotiveSection = new LinkedHashSet<>();
+//        SectionEntity cars = new SectionEntity("cars");
+//        SectionEntity parts = new SectionEntity("parts");
+//        automotiveSection.add(cars);
+//        automotiveSection.add(parts);
+//        em.persist(cars);
+//        em.persist(parts);
+//
+//        Set<SectionEntity> gamesSection = new LinkedHashSet<>();
+//        SectionEntity pc = new SectionEntity("pc");
+//        SectionEntity ps4 = new SectionEntity("ps4");
+//        gamesSection.add(pc);
+//        gamesSection.add(ps4);
+//        em.persist(pc);
+//        em.persist(ps4);
+//
+//        CategoryEntity computers = new CategoryEntity("computers");
+//        computers.setSections(computerSection);
+//
+//        CategoryEntity automotive = new CategoryEntity("automotive");
+//        automotive.setSections(automotiveSection);
+//
+//        CategoryEntity games = new CategoryEntity("games");
+//        games.setSections(gamesSection);
+//
+//        em.persist(computers);
+//        em.persist(automotive);
+//        em.persist(games);
+//    }
+
+
+    public void initializeSections()
     {
-        System.out.println("Test user added");
 
-        ProfileEntity user = new ProfileEntity("admin", "admin","admin", "admin",
-                "admin@admin.pl", LocalDate.parse("2007-12-03"));
-        em.persist(user);
-
-        var session = request.getSession(true);
-        session.setAttribute("username", "admin");
-        return "addAuction.xhtml";
     }
-
 
 }

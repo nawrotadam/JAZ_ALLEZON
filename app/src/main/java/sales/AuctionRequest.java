@@ -13,9 +13,12 @@ public class AuctionRequest implements Serializable {
     private BigDecimal price;
     private String category;
     private String section;
-    private String parameter1;
-    private String parameter2;
-    private String parameter3;
+    private String parameterName1;
+    private String parameterName2;
+    private String parameterName3;
+    private String parameterValue1;
+    private String parameterValue2;
+    private String parameterValue3;
     private String photo1;
     private String photo2;
     private String photo3;
@@ -46,12 +49,19 @@ public class AuctionRequest implements Serializable {
     public String getSection() { return section; }
     public void setSection(String section) { this.section = section; }
 
-    public String getParameter1() { return parameter1; }
-    public void setParameter1(String parameter1) { this.parameter1 = parameter1; }
-    public String getParameter2() { return parameter2; }
-    public void setParameter2(String parameter2) { this.parameter2 = parameter2; }
-    public String getParameter3() { return parameter3; }
-    public void setParameter3(String parameter3) { this.parameter3 = parameter3; }
+    public String getParameterName1() { return parameterName1; }
+    public void setParameterName1(String parameterName1) { this.parameterName1 = parameterName1; }
+    public String getParameterName2() { return parameterName2; }
+    public void setParameterName2(String parameterName2) { this.parameterName2 = parameterName2; }
+    public String getParameterName3() { return parameterName3; }
+    public void setParameterName3(String parameterName3) { this.parameterName3 = parameterName3; }
+
+    public String getParameterValue1() { return parameterValue1; }
+    public void setParameterValue1(String parameterValue1) { this.parameterValue1 = parameterValue1; }
+    public String getParameterValue2() { return parameterValue2; }
+    public void setParameterValue2(String parameterValue2) { this.parameterValue2 = parameterValue2; }
+    public String getParameterValue3() { return parameterValue3; }
+    public void setParameterValue3(String parameterValue3) { this.parameterValue3 = parameterValue3; }
 
     public String getPhoto1() { return photo1; }
     public void setPhoto1(String photo1) { this.photo1 = photo1; }

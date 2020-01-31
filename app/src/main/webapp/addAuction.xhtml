@@ -8,7 +8,7 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui" xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 <h:head>
     <title>LoginPage</title>
@@ -34,23 +34,19 @@
 
         <br/>
 
-        <h:inputText id="category" a:placeholder="category" value="#{auctionRequest.category}">
-            <f:validateRequired/>
-        </h:inputText>
+        <h:selectOneMenu value="#{auctionRequest.section}">
+            <f:selectItems value="#{auctionRepository.sectionNames}"/>
+        </h:selectOneMenu>
 
         <br/>
 
-        <h:inputText id="section" a:placeholder="section" value="#{auctionRequest.section}">
-            <f:validateRequired/>
-        </h:inputText>
+        <h:inputText id="paramName1" a:placeholder="Parameter name" value="#{auctionRequest.parameterName1}"/>
+        <h:inputText id="paramValue1" a:placeholder="Parameter value" value="#{auctionRequest.parameterValue1}"/><br/>
+        <h:inputText id="paramName2" a:placeholder="Parameter name" value="#{auctionRequest.parameterName2}"/>
+        <h:inputText id="paramValue2" a:placeholder="Parameter value" value="#{auctionRequest.parameterValue2}"/><br/>
+        <h:inputText id="paramName3" a:placeholder="Parameter name" value="#{auctionRequest.parameterName3}"/>
+        <h:inputText id="paramValue3" a:placeholder="Parameter value" value="#{auctionRequest.parameterValue3}"/><br/>
 
-        <br/>
-
-        <h:inputText id="param1" a:placeholder="parametr 1" value="#{auctionRequest.parameter1}"/>
-        <h:inputText id="param2" a:placeholder="parametr 2" value="#{auctionRequest.parameter2}"/>
-        <h:inputText id="param3" a:placeholder="parametr 3" value="#{auctionRequest.parameter3}"/>
-
-        <br/>
 
         <h:inputText id="photo1" a:placeholder="First photo" value="#{auctionRequest.photo1}"/>
         <h:inputText id="photo2" a:placeholder="Second photo" value="#{auctionRequest.photo2}"/>
