@@ -1,7 +1,7 @@
 package sales;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -16,9 +16,8 @@ public class SectionEntity {
     @NotNull
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name="category_id")
-    private CategoryEntity category;
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy="section")
+    private Set<CategoryEntity> categories;
 
 
     public SectionEntity() { }
@@ -30,6 +29,6 @@ public class SectionEntity {
     public String getName(){ return name; }
     public void setName(String name) {this.name = name;}
 
-    public CategoryEntity getCategory(){ return category; }
-    public void setCategory(CategoryEntity category) {this.category = category;}
+    public Set<CategoryEntity> getCategories(){ return categories; }
+    public void setCategories(Set<CategoryEntity> categories) {this.categories = categories;}
 }

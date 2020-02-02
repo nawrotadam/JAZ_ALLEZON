@@ -1,6 +1,7 @@
 package sales;
 
 import auth.ProfileEntity;
+import sales.AuctionEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

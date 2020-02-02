@@ -15,20 +15,22 @@
 </h:head>
 
 <h:body>
-
     <h:form>
-        <h:inputText a:placeholder="Old category" value="#{auctionRequest.category}">
+       <h:outputText value="Write down name of the category you want to change"/><br/>
+
+        <h:inputText id="oldName" a:placeholder="old name" value="#{auctionRequest.category}">
             <f:validateRequired/>
         </h:inputText><br/>
 
-        <h:inputText a:placeholder="New category name" value="#{auctionRequest.newCategory}">
+        <h:inputText id="newName" a:placeholder="new name" value="#{auctionRequest.newCategory}">
             <f:validateRequired/>
-        </h:inputText><br/>
+        </h:inputText>
 
-        <h:commandButton action="#{auctionRepository.editCategory}" value="Edit category"/>
+        <h:commandButton action="#{auctionRepository.editCategory}" value="Change category"/>
+
     </h:form>
 
-
 </h:body>
+
 
 </html>

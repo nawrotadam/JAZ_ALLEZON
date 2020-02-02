@@ -58,12 +58,6 @@
         <h:column>
             <h:outputText value="#{auction.price}"/>
         </h:column>
-        <h:column>
-            <h:inputHidden action="#{auctionRequest.auctionId}">
-                <f:param name="auctionId" value="#{auction.id}"/>
-            </h:inputHidden>
-            <h:button outcome="editAuction.xhtml" value="Edit auction"/>
-        </h:column>
     </h:dataTable>
 
 </h:body>

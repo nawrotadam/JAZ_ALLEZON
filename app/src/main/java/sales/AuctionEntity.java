@@ -2,7 +2,6 @@ package sales;
 import auth.ProfileEntity;
 
 import javax.persistence.*;
-import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.List;
@@ -32,8 +31,8 @@ public class AuctionEntity {
     private ProfileEntity owner;
 
     @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "category_id")
-    private CategoryEntity category;
+    @JoinColumn(name = "section_id")
+    private SectionEntity section;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "auction")
     private List<PhotoEntity> photoList;
@@ -49,7 +48,7 @@ public class AuctionEntity {
     public String getTitle() { return title; }
     public String getDescription() { return description; }
     public BigDecimal getPrice() { return price; }
-    public CategoryEntity getCategory() { return category; }
+    public SectionEntity getSection() { return section; }
     public ProfileEntity getOwner(){return owner;}
     public List<PhotoEntity> getPhotoList(){return photoList;}
     public Set<AuctionParameterEntity> getParameters(){return parameters;}
@@ -59,7 +58,7 @@ public class AuctionEntity {
     public void setDescription(String description) { this.description = description; }
     public void setPrice(BigDecimal price) { this.price = price; }
     public void setOwner(ProfileEntity owner) { this.owner = owner; }
-    public void setCategory(CategoryEntity category) { this.category = category; }
+    public void setSection(SectionEntity section) { this.section = section; }
     public void setPhotoList(List<PhotoEntity> photoList) { this.photoList = photoList; }
     public void setParameters(Set<AuctionParameterEntity> parameters) { this.parameters = parameters; }
 

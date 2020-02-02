@@ -1,4 +1,4 @@
-CREATE TABLE category
+CREATE TABLE section
 (
     id BIGSERIAL NOT NULL,
     name varchar NOT NULL,
@@ -6,15 +6,15 @@ CREATE TABLE category
     PRIMARY KEY (id)
 );
 
-CREATE TABLE section
+CREATE TABLE category
 (
     id BIGSERIAL NOT NULL,
     name varchar NOT NULL,
 
-    category_id BIGINT NOT NULL,
+    section_id BIGINT NOT NULL,
 
     PRIMARY KEY (id),
-    FOREIGN KEY (category_id) REFERENCES category(id)
+    FOREIGN KEY (section_id) REFERENCES section(id)
 );
 
 CREATE TABLE auction
@@ -25,11 +25,11 @@ CREATE TABLE auction
     price numeric NOT NULL,
 
     owner_id BIGINT NOT NULL,
-    category_id BIGINT NOT NULL,
+    section_id BIGINT NOT NULL,
 
     PRIMARY KEY (id),
     FOREIGN KEY (owner_id) REFERENCES profile (id),
-    FOREIGN KEY (category_id) REFERENCES category (id)
+    FOREIGN KEY (section_id) REFERENCES section (id)
 );
 
 CREATE TABLE photo

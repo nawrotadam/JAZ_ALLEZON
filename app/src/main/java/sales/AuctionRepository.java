@@ -1,19 +1,21 @@
 package sales;
 import auth.ProfileEntity;
 
-import javax.annotation.PostConstruct;
+import javax.annotation.ManagedBean;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+
+// https://scene360.com/wp-content/uploads/2014/04/action-fighting-movies-06.jpg
+// https://scene360.com/wp-content/uploads/2014/04/action-fighting-movies-22.jpg
+// https://scene360.com/wp-content/uploads/2014/04/action-fighting-movies-02.jpg
 
 @Named
 @RequestScoped
@@ -39,14 +41,14 @@ public class AuctionRepository {
         AuctionEntity auction = new AuctionEntity();
         auction.setOwner(auctionOwner);
 
-        String sectionName = auctionRequest.getSection();
-        CategoryEntity category = em.createQuery("Select s.category from SectionEntity s where s.name = :sectionName", CategoryEntity.class).
-                setParameter("sectionName", sectionName).getSingleResult();
+        String categoryName = auctionRequest.getCategory();
+        SectionEntity section = em.createQuery("Select c.section from CategoryEntity c where c.name = :categoryName", SectionEntity.class).
+                setParameter("categoryName", categoryName).getSingleResult();
 
-        SectionEntity section = em.createQuery("Select s from SectionEntity s where s.name = :sectionName", SectionEntity.class).
-                setParameter("sectionName", sectionName).getSingleResult();
-        section.setCategory(category);
-        auction.setCategory(category);
+        CategoryEntity category = em.createQuery("Select c from CategoryEntity c where c.name = :categoryName", CategoryEntity.class).
+                setParameter("categoryName", categoryName).getSingleResult();
+        category.setSection(section);
+        auction.setSection(section);
 
         auction.setTitle(auctionRequest.getTitle());
         auction.setDescription(auctionRequest.getDescription());
@@ -98,16 +100,16 @@ public class AuctionRepository {
                 createQuery("Select a from AuctionEntity a where a.id = :auctionId", AuctionEntity.class).
                 setParameter("auctionId", auctionId).getSingleResult();
 
-        String sectionName = auctionRequest.getSection();
-        CategoryEntity category = em.createQuery("Select s.category from SectionEntity s where s.name = :sectionName", CategoryEntity.class).
-                setParameter("sectionName", sectionName).getSingleResult();
+        String categoryName = auctionRequest.getCategory();
+        SectionEntity section = em.createQuery("Select c.section from CategoryEntity c where c.name = :categoryName", SectionEntity.class).
+                setParameter("categoryName", categoryName).getSingleResult();
 
-        SectionEntity section = em.createQuery("Select s from SectionEntity s where s.name = :sectionName", SectionEntity.class).
-                setParameter("sectionName", sectionName).getSingleResult();
-        section.setName(auctionRequest.getNewSection());
-        section.setCategory(category);
-        auction.setCategory(category);
-        em.merge(section);
+        CategoryEntity category = em.createQuery("Select c from CategoryEntity c where c.name = :categoryName", CategoryEntity.class).
+                setParameter("categoryName", categoryName).getSingleResult();
+        category.setName(auctionRequest.getNewCategory());
+        category.setSection(section);
+        auction.setSection(section);
+        em.merge(category);
 
         auction.setTitle(auctionRequest.getNewTitle());
         auction.setDescription(auctionRequest.getNewDescription());
@@ -115,14 +117,53 @@ public class AuctionRepository {
 
         List<PhotoEntity> photoList = em.createQuery("Select p from PhotoEntity p where p.auction = :auction", PhotoEntity.class).
                 setParameter("auction", auction).getResultList();
-        photoList.get(0).setLink(auctionRequest.getNewPhoto1());
-        photoList.get(1).setLink(auctionRequest.getNewPhoto2());
-        photoList.get(2).setLink(auctionRequest.getNewPhoto3());
+        if(photoList.size() == 1)
+        {
+            photoList.get(0).setLink(auctionRequest.getNewPhoto1());
+            em.merge(photoList.get(0));
+        }
+        else if(photoList.size() == 2)
+        {
+            photoList.get(0).setLink(auctionRequest.getNewPhoto1());
+            photoList.get(1).setLink(auctionRequest.getNewPhoto2());
+            em.merge(photoList.get(0));
+            em.merge(photoList.get(1));
+        }
+        else if(photoList.size() == 3)
+        {
+            photoList.get(0).setLink(auctionRequest.getNewPhoto1());
+            photoList.get(1).setLink(auctionRequest.getNewPhoto2());
+            photoList.get(2).setLink(auctionRequest.getNewPhoto3());
+            em.merge(photoList.get(0));
+            em.merge(photoList.get(1));
+            em.merge(photoList.get(2));
+        }
+
+
+
+//
+//        ParameterEntity parameter1 = new ParameterEntity(auctionRequest.getParameterName1());
+//        AuctionParameterEntity auctionParameter1 = new AuctionParameterEntity();
+//        auctionParameter1.setAuction(auction);
+//        auctionParameter1.setParameter(parameter1);
+//        auctionParameter1.setValue(auctionRequest.getParameterValue1());
+//        em.persist(auctionParameter1);
+
 
         AuctionParameterEntity auctionParameter = em.createQuery("Select p from AuctionParameterEntity p where p.auction = :auction", AuctionParameterEntity.class).
                 setParameter("auction", auction).getSingleResult();
 
         Set<ParameterEntity> parameterSet = new LinkedHashSet<>();
+
+//        AuctionParameterEntity parameterValue1;
+//        ParameterEntity parameterName1;
+//
+//        AuctionParameterEntity auctionParameter1 = em.createQuery("Select p from AuctionParameterEntity p where p.auction = :auction", AuctionParameterEntity.class).
+//                setParameter("auction", auction).getSingleResult();
+//
+//        ParameterEntity parameter =
+
+
         ParameterEntity parameter1 = new ParameterEntity(auctionRequest.getParameterName1());
         ParameterEntity parameter2 = new ParameterEntity(auctionRequest.getParameterName2());
         ParameterEntity parameter3 = new ParameterEntity(auctionRequest.getParameterName3());
@@ -136,95 +177,6 @@ public class AuctionRepository {
 
         em.merge(auction);
         return "index";
-    }
-
-    @Transactional
-    public String addSection() {
-        String categoryName = auctionRequest.getCategory();
-        String sectionName = auctionRequest.getSection();
-        List<SectionEntity> findSection = em.
-                createQuery("Select s from SectionEntity s where s.name = :sectionName", SectionEntity.class).
-                setParameter("sectionName", sectionName).getResultList();
-
-        if(findSection.isEmpty())
-        {
-            CategoryEntity category = em.
-                    createQuery("Select c from CategoryEntity c where c.name = :categoryName", CategoryEntity.class).
-                    setParameter("categoryName", categoryName).getSingleResult();
-
-            SectionEntity section = new SectionEntity(auctionRequest.getSection());
-            section.setCategory(category);
-            em.persist(section);
-        }
-        return "index";
-    }
-
-    @Transactional
-    public String editSection() {
-        String sectionName = auctionRequest.getSection();
-        String newSectionName = auctionRequest.getNewSection();
-
-        List<SectionEntity> findSection = em.createQuery("Select s from SectionEntity s where s.name = :sectionName", SectionEntity.class).
-                setParameter("sectionName", sectionName).getResultList();
-
-        if(!findSection.isEmpty())
-        {
-            findSection.get(0).setName(newSectionName);
-            em.merge(findSection.get(0));
-        }
-        return "index";
-    }
-
-    @Transactional
-    public String addCategory()
-    {
-        String categoryName = auctionRequest.getCategory();
-        List<CategoryEntity> findCategory = em.createQuery("Select c from CategoryEntity c where c.name = :categoryName", CategoryEntity.class).
-                setParameter("categoryName", categoryName).getResultList();
-
-        if(findCategory.isEmpty())
-        {
-            CategoryEntity category = new CategoryEntity();
-            category.setName(categoryName);
-            em.persist(category);
-        }
-        return "index";
-    }
-
-    @Transactional
-    public String editCategory()
-    {
-        String oldCategoryName = auctionRequest.getCategory();
-        String newCategoryName = auctionRequest.getNewCategory();
-
-        List<CategoryEntity> findCategory = em.createQuery("Select c from CategoryEntity c where c.name = :oldCategoryName", CategoryEntity.class).
-                setParameter("oldCategoryName", oldCategoryName).getResultList();
-
-        if(!findCategory.isEmpty())
-        {
-            findCategory.get(0).setName(newCategoryName);
-        }
-
-        return "index";
-    }
-
-    @Transactional
-    public List<PhotoEntity> getThumbnails()
-    {
-        // https://scene360.com/wp-content/uploads/2014/04/action-fighting-movies-06.jpg
-        // https://scene360.com/wp-content/uploads/2014/04/action-fighting-movies-22.jpg
-        // https://scene360.com/wp-content/uploads/2014/04/action-fighting-movies-02.jpg
-        var session = request.getSession(false);
-        String sessionUsername = String.valueOf(session.getAttribute("username"));
-
-        List<ProfileEntity> auctionOwnerList = em.
-                createQuery("Select u from ProfileEntity u where u.username = :sessionUsername", ProfileEntity.class).
-                setParameter("sessionUsername", sessionUsername).getResultList();
-        ProfileEntity auctionOwner = auctionOwnerList.get(auctionOwnerList.size() - 1);
-
-        return em.
-                createQuery("Select a.photoList from AuctionEntity a where a.owner = :auctionOwner").
-                setParameter("auctionOwner", auctionOwner).getResultList();
     }
 
     @Transactional
@@ -249,9 +201,75 @@ public class AuctionRepository {
     }
 
     @Transactional
-    public List<AuctionEntity> getAllAuctions()
+    public String addCategory()
     {
-        return em.createQuery("Select a from AuctionEntity a", AuctionEntity.class).getResultList();
+        String categoryName = auctionRequest.getCategory();
+        String sectionName = auctionRequest.getSection();
+        List<CategoryEntity> findCategory = em.createQuery("Select c from CategoryEntity c where c.name = :categoryName", CategoryEntity.class).
+                setParameter("categoryName", categoryName).getResultList();
+
+        if(findCategory.isEmpty())
+        {
+            SectionEntity section = em.
+                    createQuery("Select s from SectionEntity s where s.name = :sectionName", SectionEntity.class).
+                    setParameter("sectionName", sectionName).getSingleResult();
+
+            CategoryEntity category = new CategoryEntity();
+            category.setName(categoryName);
+            category.setSection(section);
+            em.persist(category);
+        }
+        return "index";
+    }
+
+    @Transactional
+    public String editCategory()
+    {
+        String categoryName = auctionRequest.getCategory();
+        String newCategoryName = auctionRequest.getNewCategory();
+
+        List<CategoryEntity> findCategory = em.createQuery("Select c from CategoryEntity c where c.name = :categoryName", CategoryEntity.class).
+                setParameter("categoryName", categoryName).getResultList();
+
+        if(!findCategory.isEmpty())
+        {
+            findCategory.get(0).setName(newCategoryName);
+            em.merge(findCategory.get(0));
+        }
+        return "index";
+    }
+
+    @Transactional
+    public String addSection() {
+        String sectionName = auctionRequest.getSection();
+        List<SectionEntity> sectionList = em.
+                createQuery("Select s from SectionEntity s where s.name = :sectionName", SectionEntity.class).
+                setParameter("sectionName", sectionName).getResultList();
+
+        if(sectionList.isEmpty())
+        {
+            SectionEntity section = new SectionEntity(auctionRequest.getSection());
+            em.persist(section);
+
+        }
+        return "index";
+    }
+
+    @Transactional
+    public String editSection()
+    {
+        String oldSectionName = auctionRequest.getSection();
+        String newSectionName = auctionRequest.getNewSection();
+
+        List<SectionEntity> findSection = em.createQuery("Select s from SectionEntity s where s.name = :oldSectionName", SectionEntity.class).
+                setParameter("oldSectionName", oldSectionName).getResultList();
+
+        if(!findSection.isEmpty())
+        {
+            findSection.get(0).setName(newSectionName);
+        }
+
+        return "index";
     }
 
     @Transactional
@@ -266,24 +284,31 @@ public class AuctionRepository {
         return em.createQuery("Select c.name from CategoryEntity c", String.class).getResultList();
     }
 
+
+    @Transactional
+    public List<AuctionEntity> getAllAuctions()
+    {
+        return em.createQuery("Select a from AuctionEntity a", AuctionEntity.class).getResultList();
+    }
+
     @Transactional
     public void addTestCategoryAndSection() {
-        String sectionName = "asd";
-        List<SectionEntity> sectionList = em.createQuery("Select s from SectionEntity s where s.name = :sectionName", SectionEntity.class).
-                setParameter("sectionName", sectionName).getResultList();
-
         String categoryName = "asd";
         List<CategoryEntity> categoryList = em.createQuery("Select c from CategoryEntity c where c.name = :categoryName", CategoryEntity.class).
                 setParameter("categoryName", categoryName).getResultList();
 
-        if(sectionList.isEmpty() && categoryList.isEmpty())
-        {
-            var category = new CategoryEntity("asd");
-            var section = new SectionEntity("asd");
+        String sectionName = "asd";
+        List<SectionEntity> sectionList = em.createQuery("Select s from SectionEntity s where s.name = :sectionName", SectionEntity.class).
+                setParameter("sectionName", sectionName).getResultList();
 
-            section.setCategory(category);
-            em.persist(category);
+        if(categoryList.isEmpty() && sectionList.isEmpty())
+        {
+            var section = new SectionEntity("asd");
+            var category = new CategoryEntity("asd");
+
             em.persist(section);
+            category.setSection(section);
+            em.persist(category);
         }
     }
 

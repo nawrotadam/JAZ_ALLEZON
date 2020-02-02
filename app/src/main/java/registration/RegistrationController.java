@@ -32,7 +32,7 @@ public class RegistrationController {
                 registrationRequest.getDateOfBirth()
         );
 
-        return "addAuction.xhtml?faces-redirect=true";
+        return "index.xhtml?faces-redirect=true";
     }
 
 }

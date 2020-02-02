@@ -15,22 +15,20 @@
 </h:head>
 
 <h:body>
-    <h:form>
-       <h:outputText value="Write down name of the section you want to change"/><br/>
 
-        <h:inputText id="oldName" a:placeholder="old name" value="#{auctionRequest.section}">
+    <h:form>
+        <h:inputText a:placeholder="Old section" value="#{auctionRequest.section}">
             <f:validateRequired/>
         </h:inputText><br/>
 
-        <h:inputText id="newName" a:placeholder="new name" value="#{auctionRequest.newSection}">
+        <h:inputText a:placeholder="New section name" value="#{auctionRequest.newSection}">
             <f:validateRequired/>
-        </h:inputText>
+        </h:inputText><br/>
 
-        <h:commandButton action="#{auctionRepository.editSection}" value="Change section"/>
-
+        <h:commandButton action="#{auctionRepository.editSection}" value="Edit section"/>
     </h:form>
 
-</h:body>
 
+</h:body>
 
 </html>
