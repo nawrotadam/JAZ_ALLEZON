@@ -35,5 +35,6 @@ public class RegistrationController {
         return "login.xhtml?faces-redirect=true";
     }
 
+
 }
 
